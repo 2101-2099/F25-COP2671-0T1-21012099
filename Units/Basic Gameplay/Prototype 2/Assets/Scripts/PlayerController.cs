@@ -4,9 +4,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //variables
-    public float horizontalInput;
-    public float speed = 10.0f;
-    public float xRange = 10.0f;
+    private float horizontalInput;
+    private float speed = 10.0f;
+    private float xRange = 20.0f;
     public GameObject projectilePrefab;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
