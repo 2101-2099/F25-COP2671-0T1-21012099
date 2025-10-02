@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    //variables
     private Rigidbody enemyRb;
     private GameObject player;
     public float speed = 3.0f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,7 +17,13 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //has the enemy chase the player
         Vector3 lookDirection = (player.transform.position - transform.position).normalized;
         enemyRb.AddForce(lookDirection *  speed);
+        //destroy the enemy when they go do far down
+        if (transform.position.y < -10)
+        {
+            Destroy(gameObject);
+        }
     }
 }

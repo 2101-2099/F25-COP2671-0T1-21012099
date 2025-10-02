@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    //variables
     private Rigidbody playerRB;
     private GameObject focalPoint;
     public GameObject powerupIndicator;
@@ -20,11 +21,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //player input
         float forwardInput = Input.GetAxis("Vertical");
         playerRB.AddForce(focalPoint.transform.forward * speed * forwardInput);
+
+        //powerup indicator around the player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.5f, 0);
     }
 
+    //player collides with the powerup
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Powerup"))
@@ -36,6 +41,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //amount of time the player has before taking away powerup
     IEnumerator PowerupCountdownRoutine()
     {
         yield return new WaitForSeconds(7);
@@ -43,6 +49,7 @@ public class PlayerController : MonoBehaviour
         powerupIndicator.gameObject.SetActive(false);
     }
 
+    //collision with the enemy while having a powerup
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Enemy") && hasPowerup)
