@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
+    //variables
     private Rigidbody targetRB;
     private GameManager gameManager;
     private float minSpeed = 12;
@@ -28,6 +29,7 @@ public class Target : MonoBehaviour
         
     }
 
+    //user clicks on a box while game is active
     private void OnMouseDown()
     {
         if (gameManager.isGameActive)
@@ -39,6 +41,7 @@ public class Target : MonoBehaviour
 
     }
 
+    //when the object interacts with the sensor object
     private void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
@@ -48,16 +51,19 @@ public class Target : MonoBehaviour
         }
     }
 
+    //gets a random force
     Vector3 RandomForce()
     {
         return Vector3.up * Random.Range(minSpeed, maxSpeed);
     }
 
+    //gets a random torque
     float RandomTorque()
     {
         return Random.Range(-maxTorque, maxTorque);
     }
 
+    //random spawn position
     Vector3 RandomSpawnPos()
     {
         return new Vector3(Random.Range(-xRange, xRange), ySpawnPos);

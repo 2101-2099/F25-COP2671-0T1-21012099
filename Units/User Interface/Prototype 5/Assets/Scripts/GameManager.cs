@@ -7,20 +7,18 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    //variables
     public List<GameObject> targets;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI gameOverText;
     public Button restartButton;
+    public GameObject titleScreen;
     public bool isGameActive;
     private int score;
     private float spawnRate = 1.0f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        isGameActive = true;
-        StartCoroutine(SpawnTarget());
-        score = 0;
-        UpdateScore(0);
         
     }
 
@@ -30,6 +28,7 @@ public class GameManager : MonoBehaviour
         
     }
 
+    //spawns an item if the game is active
     IEnumerator SpawnTarget()
     {
         while (isGameActive)
@@ -40,12 +39,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //updates the score
     public void UpdateScore(int scoreToAdd)
     {
         score += scoreToAdd;
         scoreText.text = "Score: " + score;
     }
 
+    //sets the ui for game over and turn off the game active
     public void GameOver()
     {
         gameOverText.gameObject.SetActive(true);
@@ -53,8 +54,22 @@ public class GameManager : MonoBehaviour
         isGameActive=false;
     }
 
+    //restarts the game
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    //starts the game
+    public void StartGame(int difficulty)
+    {
+        isGameActive = true;
+        score = 0;
+        spawnRate /= difficulty;
+
+        StartCoroutine(SpawnTarget());
+        UpdateScore(0);
+
+        titleScreen.gameObject.SetActive(false);
     }
 }
