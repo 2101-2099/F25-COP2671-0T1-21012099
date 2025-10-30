@@ -9,6 +9,10 @@ public class DayNightEvents : MonoBehaviour
     [Tooltip("When the sun rises (0 = midnight, 0.25 = 6AM, 0.5 = noon, etc.)")]
     [SerializeField] private float _sunriseTime = 0.25f; // 6 AM
 
+    //[Range(0f, 1f)]
+    //[Tooltip("When the sun rises (0 = midnight, 0.25 = 6AM, 0.5 = noon, etc.)")]
+    //[SerializeField] private float _midnightTime = 0f; //midnight
+
     [Range(0f, 1f)]
     [Tooltip("When the sun sets (0 = midnight, 0.75 = 6PM, etc.)")]
     [SerializeField] private float _sunsetTime = 0.75f;  // 6 PM
