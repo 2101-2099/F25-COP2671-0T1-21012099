@@ -44,8 +44,26 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Water
+    uniqueID: 131391505
+    locked: 0
+  - name: Pathway
+    uniqueID: 2816651979
+    locked: 0
+  - name: Farmland
+    uniqueID: 2313698759
+    locked: 0
+  - name: Manmade
+    uniqueID: 1046583777
+    locked: 0
   - name: Player
     uniqueID: 4039225565
+    locked: 0
+  - name: Landscaping
+    uniqueID: 113044319
+    locked: 0
+  - name: InFront
+    uniqueID: 33460237
     locked: 0
   m_RenderingLayers:
   - Default
