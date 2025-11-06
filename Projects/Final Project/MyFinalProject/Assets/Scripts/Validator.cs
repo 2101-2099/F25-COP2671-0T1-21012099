@@ -1,12 +1,9 @@
 using UnityEngine;
 
-public class FarmingController : MonoBehaviour
+public class Validator : MonoBehaviour
 {
-    //tool at hand
-    //tool speed
-    //seed to use
-    //selected block
-
+    //player has the validator with box collider
+    //checks if it is a valid place to plant
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

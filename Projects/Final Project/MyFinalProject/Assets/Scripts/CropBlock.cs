@@ -2,13 +2,30 @@ using UnityEngine;
 
 public class CropBlock : MonoBehaviour
 {
-    enum GrowthStage
+    public enum GrowthStage
     {
         seed,
         sprout,
-        youngPlant,
+        young,
         mature
     }
+
+    //tilled soil group
+        //tilled soil icon Sprite
+        //plowed soil sr    Sprite Render
+    //water soil group
+        //water soil icon Sprite
+        //watered soil sr Sprite Render
+
+    //crop sr       Sprite Render
+
+    //timer being timer in the bottom left corner with time
+    //also a growth time
+    //check to see if something is selected or not to see if you can plant
+    //particle effect when ready to harvest
+    //plantings, watering, tilling, and harvest are going to be on button
+    //in an empty game object I have a WaterSR sprite and a CropSR sprite
+    //do not forget to shift all of the tilemap by 0.5 to allign everything
 
     public SeedPacket plantedSeed;
     public SpriteRenderer spriteRenderer;
