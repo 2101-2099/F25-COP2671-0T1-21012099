@@ -20,21 +20,25 @@ public class DayNightEvents : MonoBehaviour
     [Header("Events")]
     public UnityEvent OnSunrise;
     public UnityEvent OnSunset;
-    [SerializeField] private TimeManager timeManager;
+    public UnityEvent OnMidnight;
+
+    private float _previousTime = 0f;
 
     private bool _isDaytime;
+    private bool _hasTriggeredMidnight;
 
-    private void Start()
+    private void OnEnable()
     {
-        if (timeManager != null)
-            timeManager.OnUpdateTrigger.AddListener(CheckTime);
+        // Subscribe to TimeManager’s normalized time updates
+        TimeManager.OnTimerUpdate.AddListener(CheckTime);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (timeManager != null)
-            timeManager.OnUpdateTrigger.RemoveListener(CheckTime);
+        // Unsubscribe cleanly
+        TimeManager.OnTimerUpdate.RemoveListener(CheckTime);
     }
+
 
     private void CheckTime(float normalizedTime)
     {
@@ -56,5 +60,22 @@ public class DayNightEvents : MonoBehaviour
             OnSunset?.Invoke();
             Debug.Log("Sunset");
         }
+
+        // --- Midnight ---
+        // Detect wrap-around from near 1 back to 0 (start of new day)
+        if (_previousTime > 0.9f && normalizedTime < 0.1f && !_hasTriggeredMidnight)
+        {
+            _hasTriggeredMidnight = true;
+            OnMidnight?.Invoke();
+            Debug.Log("Midnight triggered");
+        }
+
+        // Reset midnight trigger once we’ve moved past the early part of the day
+        if (normalizedTime > 0.1f)
+        {
+            _hasTriggeredMidnight = false;
+        }
+
+        _previousTime = normalizedTime;
     }
 }

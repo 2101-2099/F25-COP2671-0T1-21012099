@@ -12,15 +12,31 @@ public class DayNightLighting : MonoBehaviour
     public Light2D _light;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         _light = GetComponent<Light2D>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        _light.color = dayNightColors.Evaluate(TimeManager.Now);
-        _light.intensity = lightIntensityCurve.Evaluate(TimeManager.Now);
+        // Subscribe to the time update event
+        TimeManager.OnTimerUpdate.AddListener(UpdateLighting);
+    }
+
+    private void OnDisable()
+    {
+        // Unsubscribe to avoid memory leaks or errors when disabled
+        TimeManager.OnTimerUpdate.RemoveListener(UpdateLighting);
+    }
+
+    /// <summary>
+    /// Called automatically whenever TimeManager updates the normalized time (0–1).
+    /// </summary>
+    private void UpdateLighting(float normalizedTime)
+    {
+        if (_light == null) return;
+
+        _light.color = dayNightColors.Evaluate(normalizedTime);
+        _light.intensity = lightIntensityCurve.Evaluate(normalizedTime);
     }
 }
