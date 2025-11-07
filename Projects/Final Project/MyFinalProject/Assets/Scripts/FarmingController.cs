@@ -6,6 +6,7 @@ public class FarmingController : MonoBehaviour
     //tool speed
     //seed to use
     //selected block
+    //ignore this tool use changes sprite/tool at hand
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
