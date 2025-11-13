@@ -2,17 +2,12 @@ using UnityEngine;
 
 public class DayNightController : MonoBehaviour
 {
-    //set starting time at 6:00 am
+    [Range(0, 23)]
+    public int startHour = 6;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        TimeManager.SetStartHour(6);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // Set the starting hour in TimeManager
+        TimeManager.SetStartHour(startHour);
     }
 }

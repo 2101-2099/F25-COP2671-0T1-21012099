@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c897686667eb94fb3c87826f8af651, type: 3}
   m_Name: Potato
   m_EditorClassIdentifier: 
-  cropName: Potato
   growthSprites:
   - {fileID: 1432393377519738710, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: 9006033842410854250, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: 4225046087067793717, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: -584175852824110149, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
+  cropName: Potato
   coverImage: {fileID: 5740656609656157324, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
-  harvestablePrefab: {fileID: 0}
+  harvestablePrefab: {fileID: 2823170132450269365, guid: 2cc84d0a036d3dd40a94a9612a0c0239, type: 3}

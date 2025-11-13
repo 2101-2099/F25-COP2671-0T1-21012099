@@ -85,7 +85,7 @@ public class CropManager : MonoBehaviour
                 if (tilemap.HasTile(cellPosition))
                 {
                     var localGridPosition = new Vector2Int(x, y);
-                    //gridBlocks[x, y] = CreateGridBlock(tilemap, localGridPosition, cellPosition);
+                    gridBlocks[x, y] = CreateGridBlock(tilemap, localGridPosition, cellPosition);
                 }
             }
         }
@@ -94,39 +94,39 @@ public class CropManager : MonoBehaviour
     }
 
     // Instantiates and initializes a CropBlock at the given position
-   // private CropBlock CreateGridBlock(Tilemap tilemap, Vector2Int location, Vector3Int position)
-    //{
+    private CropBlock CreateGridBlock(Tilemap tilemap, Vector2Int location, Vector3Int position)
+    {
         // Instantiate the crop block prefab at the specified position
-        //var newGridBlock = Instantiate(_cropBlockPrefab, position, Quaternion.identity, tilemap.transform);
+        var newGridBlock = Instantiate(_cropBlockPrefab, position, Quaternion.identity, tilemap.transform);
 
         // Initialize the crop block with its tilemap name, location, and manager reference
-        //newGridBlock.Initialize(tilemap.name, location, this);
+        newGridBlock.Initialize(tilemap.name, location, this);
 
         // Disable interaction if the tilemap is not tagged as "PlayerCrop"
-        //if (tilemap.CompareTag("PlayerCrop") == false)
-            //newGridBlock.PreventUse();
+        if (tilemap.CompareTag("PlayerCrop") == false)
+            newGridBlock.PreventUse();
 
-        //return newGridBlock;
-    //}
+        return newGridBlock;
+    }
 
     // Adds a crop block to the list of planted crops if it's not already present
     public void AddToPlantedCrops(CropBlock cropBlock)
     {
-        //if (CheckForValidLocation(cropBlock.Location))
-            //_plantedCrops.Add(cropBlock);
+        if (CheckForValidLocation(cropBlock.Location))
+            _plantedCrops.Add(cropBlock);
     }
 
     // Removes a crop block from the list of planted crops based on its location
     public void RemoveFromPlantedCrops(Vector2Int location)
     {
-        //var cropBlock = _plantedCrops.SingleOrDefault(q => q.Location == location);
-        //if (cropBlock != null)
-            //_plantedCrops.Remove(cropBlock);
+        var cropBlock = _plantedCrops.SingleOrDefault(q => q.Location == location);
+        if (cropBlock != null)
+            _plantedCrops.Remove(cropBlock);
     }
 
     // Checks if a location is available for planting (i.e., not already occupied)
-    //public bool CheckForValidLocation(Vector2Int location)
-    //{
-        //return _plantedCrops.Any(q => q.Location == location) == false;
-    //}    
+    public bool CheckForValidLocation(Vector2Int location)
+    {
+        return _plantedCrops.Any(q => q.Location == location) == false;
+    }    
 }

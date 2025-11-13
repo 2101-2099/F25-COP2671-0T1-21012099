@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c897686667eb94fb3c87826f8af651, type: 3}
   m_Name: Onion
   m_EditorClassIdentifier: 
-  cropName: Onion
   growthSprites:
   - {fileID: -2158640072130186433, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: 4424967949123141699, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: 3893527236686022565, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: -4707313404745739159, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
+  cropName: Onion
   coverImage: {fileID: 7787480648833610346, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
-  harvestablePrefab: {fileID: 0}
+  harvestablePrefab: {fileID: 9191359821145316233, guid: b3a7385e08037474b93f28cf88f69303, type: 3}

@@ -65,5 +65,8 @@ TagManager:
   - name: InFront
     uniqueID: 33460237
     locked: 0
+  - name: FarmingHarvest
+    uniqueID: 289168971
+    locked: 0
   m_RenderingLayers:
   - Default

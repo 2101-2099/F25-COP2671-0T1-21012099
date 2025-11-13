@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c897686667eb94fb3c87826f8af651, type: 3}
   m_Name: Sunflower
   m_EditorClassIdentifier: 
-  cropName: Sunflower
   growthSprites:
   - {fileID: 5403710888501315245, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: -5824048891732118507, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: 6614768778416726700, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: 846023351496318078, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
+  cropName: Sunflower
   coverImage: {fileID: -6163400531934313660, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
-  harvestablePrefab: {fileID: 0}
+  harvestablePrefab: {fileID: 2359405196386636516, guid: 7a06cf8da5ef1ac42a1f4e56b84c76e5, type: 3}

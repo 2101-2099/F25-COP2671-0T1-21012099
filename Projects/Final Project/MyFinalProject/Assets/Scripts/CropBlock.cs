@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 public class CropBlock : MonoBehaviour
 {
@@ -38,46 +40,175 @@ public class CropBlock : MonoBehaviour
     //ignore this is a reminder do not forget to shift all of the tilemap by -0.5 to allign everything (going to work more with SO (scriptible objects))
     //ignore this remember to add collision to water
 
-    public Sprite tilledIcon;
-    public SpriteRenderer tiledRenderer;
+    //public Sprite tilledIcon;
+    //public SpriteRenderer tiledRenderer;
 
-    public Sprite wateredIcon;
-    public SpriteRenderer wateredRenderer;
+    //public Sprite wateredIcon;
+    //public SpriteRenderer wateredRenderer;
 
-    public SeedPacket plantedSeed;
-    public SpriteRenderer cropRenderer;
+    //public SeedPacket plantedSeed;
+    //public SpriteRenderer cropRenderer;
 
-    [SerializeField] float _growthTimer = 0f;
-    [SerializeField] float _timer = 0f;
+    //[SerializeField] float _growthTimer = 0f;
+    //[SerializeField] float _timer = 0f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    //private bool _isTilled = false;
+    //private bool _isWatered = false;
+    //private bool _isPlanted = false;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        #region Visual Overlays
+        [Header("Overlay Renderers")]
+        public SpriteRenderer soilSR;   // optional — can show tilled soil color
+        public SpriteRenderer waterSR;  // shows watered overlay
+        public SpriteRenderer cropSR;   // shows plant sprites
+        #endregion
 
-    private void TillSoil()
-    {
-        //placeholder
-    }
+        #region State
+        public bool isTilled = false;
+        public bool isWatered = false;
+        public bool hasCrop = false;
+        #endregion
 
-    private void WaterSoil()
-    {
-        //placeholder
-    }
-    private void PlantSeed()
-    {
-        //placeholder
-    }
+        #region Growth
+        public int currentGrowthStage = 0;
+        public float growthTimer = 0f;
+        public float growthTimePerStage = 5f;
+        public SeedPacket plantedSeed;
+        #endregion
 
-    private void HarvestPlants()
-    {
-        //placeholder
-    }
+        #region Grid / Manager
+        public Vector2Int Location { get; private set; }
+        public string TilemapName { get; private set; }
+        private CropManager _cropManager;
+        #endregion
+
+        private void Awake()
+        {
+            // Make sure overlays start hidden
+            if (waterSR != null) waterSR.enabled = false;
+            if (cropSR != null) cropSR.enabled = false;
+        }
+
+        private void Update()
+        {
+            if (hasCrop && isWatered && plantedSeed != null)
+            {
+                growthTimer += Time.deltaTime;
+
+                if (growthTimer >= growthTimePerStage)
+                    AdvanceGrowth();
+            }
+        }
+
+        #region Player Actions
+        public void TillSoil()
+        {
+            if (!isTilled && CanInteract())
+            {
+                isTilled = true;
+                // Optional: tint soil or change visual
+                if (soilSR != null)
+                    soilSR.color = new Color(0.7f, 0.5f, 0.3f);
+            }
+        }
+
+        public void WaterSoil()
+        {
+            if (isTilled && !isWatered && CanInteract())
+            {
+                isWatered = true;
+                if (waterSR != null)
+                    waterSR.enabled = true; // turn on the overlay
+            }
+        }
+
+        public void PlantSeed(SeedPacket seed)
+        {
+            if (isTilled && isWatered && !hasCrop && CanInteract())
+            {
+                plantedSeed = seed;
+                hasCrop = true;
+                currentGrowthStage = 0;
+                growthTimer = 0f;
+
+                if (cropSR != null)
+                {
+                    cropSR.enabled = true;
+                    cropSR.sprite = plantedSeed.growthSprites[currentGrowthStage];
+                }
+
+                _cropManager.AddToPlantedCrops(this);
+            }
+        }
+
+        public void HarvestPlants()
+        {
+            if (!hasCrop || plantedSeed == null || !CanInteract())
+                return;
+
+            if (currentGrowthStage >= plantedSeed.growthSprites.Length - 1)
+            {
+                // spawn harvestable prefab if defined
+                if (plantedSeed.harvestablePrefab != null)
+                    Instantiate(plantedSeed.harvestablePrefab, transform.position, Quaternion.identity);
+
+                ResetCrop();
+                _cropManager.RemoveFromPlantedCrops(Location);
+            }
+        }
+        #endregion
+
+        #region Growth Logic
+        private void AdvanceGrowth()
+        {
+            growthTimer = 0f;
+            currentGrowthStage++;
+
+            if (plantedSeed != null && currentGrowthStage < plantedSeed.growthSprites.Length)
+            {
+                if (cropSR != null)
+                    cropSR.sprite = plantedSeed.growthSprites[currentGrowthStage];
+            }
+            else
+            {
+                currentGrowthStage = plantedSeed.growthSprites.Length - 1;
+            }
+
+            // After growing, dry out the soil
+            isWatered = false;
+            if (waterSR != null)
+                waterSR.enabled = false;
+        }
+
+        private void ResetCrop()
+        {
+            hasCrop = false;
+            isTilled = true;   // still tilled after harvest
+            isWatered = false;
+            plantedSeed = null;
+            growthTimer = 0f;
+            currentGrowthStage = 0;
+
+            // Turn off overlays
+            if (waterSR != null) waterSR.enabled = false;
+            if (cropSR != null) cropSR.enabled = false;
+            if (cropSR != null) cropSR.sprite = null;
+        }
+        #endregion
+
+        #region Helpers
+        private bool CanInteract() => _cropManager != null && enabled;
+
+        public void PreventUse()
+        {
+            enabled = false;
+        }
+
+        public void Initialize(string tilemapName, Vector2Int location, CropManager cropManager)
+        {
+            TilemapName = tilemapName;
+            Location = location;
+            _cropManager = cropManager;
+        }
+        #endregion
 }

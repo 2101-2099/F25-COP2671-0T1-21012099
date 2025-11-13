@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13c897686667eb94fb3c87826f8af651, type: 3}
   m_Name: Strawberry
   m_EditorClassIdentifier: 
-  cropName: Strawberry
   growthSprites:
   - {fileID: 1054563701318923691, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: -6860767295571080723, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: -1310800881595630866, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   - {fileID: 5148595513376347922, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
+  cropName: Strawberry
   coverImage: {fileID: 7557663613922564261, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
-  harvestablePrefab: {fileID: 0}
+  harvestablePrefab: {fileID: 1059673650403454010, guid: 4e07880bea7d5ac4bbe6ca0f933645be, type: 3}
