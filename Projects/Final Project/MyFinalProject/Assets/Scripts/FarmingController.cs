@@ -48,7 +48,8 @@ public class FarmingController : MonoBehaviour
 
     private void Update()
     {
-        if (_selectedBlock == null) return;
+        if (_selectedBlock == null)
+        { Debug.Log("No selected block yet"); return; }
 
         // Keyboard shortcuts (1-4)
         if (Input.GetKeyDown(KeyCode.Alpha1)) OnHoe?.Invoke();
