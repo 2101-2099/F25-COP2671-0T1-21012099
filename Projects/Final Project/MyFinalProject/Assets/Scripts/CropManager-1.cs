@@ -128,5 +128,31 @@ public class CropManager : MonoBehaviour
     public bool CheckForValidLocation(Vector2Int location)
     {
         return _plantedCrops.Any(q => q.Location == location) == false;
-    }    
+    }
+    public CropBlock GetBlockAtCell(Vector3Int cellPos)
+    {
+        foreach (var grid in _cropGrids)
+        {
+            int width = grid.GetLength(0);
+            int height = grid.GetLength(1);
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    CropBlock block = grid[x, y];
+                    if (block != null)
+                    {
+                        // Convert the block's world position to a cell
+                        Vector3Int blockCell = _cropGrid.WorldToCell(block.transform.position);
+                        if (blockCell == cellPos)
+                            return block;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
 }

@@ -106,9 +106,10 @@ public class CropBlock : MonoBehaviour
             if (!isTilled && CanInteract())
             {
                 isTilled = true;
-                // Optional: tint soil or change visual
                 if (soilSR != null)
-                    soilSR.color = new Color(0.7f, 0.5f, 0.3f);
+                {
+                    soilSR.enabled = true;  // show dry tilled soil
+                }
             }
         }
 

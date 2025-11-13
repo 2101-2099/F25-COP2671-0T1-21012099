@@ -10,11 +10,15 @@ public class FarmingController : MonoBehaviour
     //ignore this tool use changes sprite/tool at hand
 
     // The currently selected crop tile
+    [Header("Selected Block")]
     [SerializeField] private CropBlock _selectedBlock;
+    public CropBlock SelectedBlock => _selectedBlock; // read-only
+
+    [Header("Seed Options")]
     [SerializeField] private SeedPacket[] availableSeeds;
     private SeedPacket _selectedSeed;
 
-    // Events for toolbar actions
+    [Header("Toolbar Events")]
     public UnityEvent OnHoe;
     public UnityEvent OnWater;
     public UnityEvent OnPlant;
@@ -22,65 +26,74 @@ public class FarmingController : MonoBehaviour
 
     private void Awake()
     {
-        // Initialize UnityEvents if they are null
+        // Ensure UnityEvents are initialized
         OnHoe ??= new UnityEvent();
         OnWater ??= new UnityEvent();
         OnPlant ??= new UnityEvent();
         OnHarvest ??= new UnityEvent();
+
+        // Hook up default listeners
+        OnHoe.AddListener(DoHoe);
+        OnWater.AddListener(DoWater);
+        OnPlant.AddListener(DoPlant);
+        OnHarvest.AddListener(DoHarvest);
     }
+
     private void Start()
     {
-        _selectedSeed = availableSeeds[0]; // default
+        // Default to first seed in array
+        if (availableSeeds.Length > 0)
+            _selectedSeed = availableSeeds[0];
     }
+
     private void Update()
     {
         if (_selectedBlock == null) return;
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))  // Key "1"
-            Hoe();
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))  // Key "2"
-            Water();
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))  // Key "3"
-            Plant(_selectedSeed);  // Make sure you have a selected seed 
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))  // Key "4"
-            Harvest();
+        // Keyboard shortcuts (1-4)
+        if (Input.GetKeyDown(KeyCode.Alpha1)) OnHoe?.Invoke();
+        if (Input.GetKeyDown(KeyCode.Alpha2)) OnWater?.Invoke();
+        if (Input.GetKeyDown(KeyCode.Alpha3)) OnPlant?.Invoke();
+        if (Input.GetKeyDown(KeyCode.Alpha4)) OnHarvest?.Invoke();
     }
 
-
-    // Set the currently selected crop block (called from Tile selection)
+    /// <summary>
+    /// Assigns the currently selected crop block (from Validator trigger)
+    /// </summary>
     public void SelectBlock(CropBlock cropBlock)
     {
         _selectedBlock = cropBlock;
+        if (cropBlock != null)
+            Debug.Log($"Selected block: {cropBlock.name}");
+        else
+            Debug.Log("Cleared selected block");
     }
 
-    // Called from UI button "Hoe"
-    public void Hoe()
+    #region Farming Actions (called by events)
+
+    private void DoHoe()
     {
         if (_selectedBlock != null)
             _selectedBlock.TillSoil();
     }
 
-    // Called from UI button "Water"
-    public void Water()
+    private void DoWater()
     {
         if (_selectedBlock != null)
             _selectedBlock.WaterSoil();
     }
 
-    // Called from UI button "Plant"
-    public void Plant(SeedPacket seed)
+    private void DoPlant()
     {
-        if (_selectedBlock != null)
-            _selectedBlock.PlantSeed(seed);
+        if (_selectedBlock != null && _selectedSeed != null)
+            _selectedBlock.PlantSeed(_selectedSeed);
     }
 
-    // Called from UI button "Harvest"
-    public void Harvest()
+    private void DoHarvest()
     {
         if (_selectedBlock != null)
             _selectedBlock.HarvestPlants();
     }
+
+    #endregion
 }
