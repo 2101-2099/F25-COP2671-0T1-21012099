@@ -85,7 +85,7 @@ public class CropManager : MonoBehaviour
                 if (tilemap.HasTile(cellPosition))
                 {
                     var localGridPosition = new Vector2Int(x, y);
-                    gridBlocks[x, y] = CreateGridBlock(tilemap, localGridPosition, cellPosition);
+                    //gridBlocks[x, y] = CreateGridBlock(tilemap, localGridPosition, cellPosition);
                 }
             }
         }
@@ -94,65 +94,65 @@ public class CropManager : MonoBehaviour
     }
 
     // Instantiates and initializes a CropBlock at the given position
-    private CropBlock CreateGridBlock(Tilemap tilemap, Vector2Int location, Vector3Int position)
-    {
-        // Instantiate the crop block prefab at the specified position
-        var newGridBlock = Instantiate(_cropBlockPrefab, position, Quaternion.identity, tilemap.transform);
+    //private CropBlock CreateGridBlock(Tilemap tilemap, Vector2Int location, Vector3Int position)
+    //{
+    //    // Instantiate the crop block prefab at the specified position
+    //    var newGridBlock = Instantiate(_cropBlockPrefab, position, Quaternion.identity, tilemap.transform);
 
-        // Initialize the crop block with its tilemap name, location, and manager reference
-        newGridBlock.Initialize(tilemap.name, location, this);
+    //    // Initialize the crop block with its tilemap name, location, and manager reference
+    //    newGridBlock.Initialize(tilemap.name, location, this);
 
-        // Disable interaction if the tilemap is not tagged as "PlayerCrop"
-        if (tilemap.CompareTag("PlayerCrop") == false)
-            newGridBlock.PreventUse();
+    //    // Disable interaction if the tilemap is not tagged as "PlayerCrop"
+    //    if (tilemap.CompareTag("PlayerCrop") == false)
+    //        newGridBlock.PreventUse();
 
-        return newGridBlock;
-    }
+    //    return newGridBlock;
+    //}
 
     // Adds a crop block to the list of planted crops if it's not already present
-    public void AddToPlantedCrops(CropBlock cropBlock)
-    {
-        if (CheckForValidLocation(cropBlock.Location))
-            _plantedCrops.Add(cropBlock);
-    }
+    //public void AddToPlantedCrops(CropBlock cropBlock)
+    //{
+    //    if (CheckForValidLocation(cropBlock.Location))
+    //        _plantedCrops.Add(cropBlock);
+    //}
 
-    // Removes a crop block from the list of planted crops based on its location
-    public void RemoveFromPlantedCrops(Vector2Int location)
-    {
-        var cropBlock = _plantedCrops.SingleOrDefault(q => q.Location == location);
-        if (cropBlock != null)
-            _plantedCrops.Remove(cropBlock);
-    }
+    //// Removes a crop block from the list of planted crops based on its location
+    //public void RemoveFromPlantedCrops(Vector2Int location)
+    //{
+    //    var cropBlock = _plantedCrops.SingleOrDefault(q => q.Location == location);
+    //    if (cropBlock != null)
+    //        _plantedCrops.Remove(cropBlock);
+    //}
 
-    // Checks if a location is available for planting (i.e., not already occupied)
-    public bool CheckForValidLocation(Vector2Int location)
-    {
-        return _plantedCrops.Any(q => q.Location == location) == false;
-    }
-    public CropBlock GetBlockAtCell(Vector3Int cellPos)
-    {
-        foreach (var grid in _cropGrids)
-        {
-            int width = grid.GetLength(0);
-            int height = grid.GetLength(1);
+    //// Checks if a location is available for planting (i.e., not already occupied)
+    //public bool CheckForValidLocation(Vector2Int location)
+    //{
+    //    return _plantedCrops.Any(q => q.Location == location) == false;
+   // }
+    //public CropBlock GetBlockAtCell(Vector3Int cellPos)
+    //{
+    //    foreach (var grid in _cropGrids)
+    //    {
+    //        int width = grid.GetLength(0);
+    //        int height = grid.GetLength(1);
 
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    CropBlock block = grid[x, y];
-                    if (block != null)
-                    {
-                        // Convert the block's world position to a cell
-                        Vector3Int blockCell = _cropGrid.WorldToCell(block.transform.position);
-                        if (blockCell == cellPos)
-                            return block;
-                    }
-                }
-            }
-        }
+    //        for (int x = 0; x < width; x++)
+    //        {
+    //            for (int y = 0; y < height; y++)
+    //            {
+    //                CropBlock block = grid[x, y];
+    //                if (block != null)
+    //                {
+    //                    // Convert the block's world position to a cell
+    //                    Vector3Int blockCell = _cropGrid.WorldToCell(block.transform.position);
+    //                    if (blockCell == cellPos)
+    //                        return block;
+    //                }
+    //            }
+    //        }
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
 
 }
