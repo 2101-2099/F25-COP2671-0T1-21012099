@@ -1,158 +1,66 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-// Ensures that a Grid component is attached to the GameObject
-[RequireComponent(typeof(Grid))]
 public class CropManager : MonoBehaviour
 {
-    // Prefab used to instantiate crop blocks on the grid
-    [SerializeField] private CropBlock _cropBlockPrefab;
+    public Tilemap farmingTilemap;
+    public GameObject cropBlockPrefab;  // A prefab containing CropBlock
 
-    // List of crops that have been planted by the player
-    [SerializeField] private List<CropBlock> _plantedCrops = new();
+    private CropBlock[,] cropGrid;
+    private Vector3Int boundsMin;
+    private Vector3Int boundsMax;
 
-    // Reference to the Grid component used for positioning
-    private Grid _cropGrid;
-
-    // Stores crop blocks for each tilemap as 2D arrays
-    private List<CropBlock[,]> _cropGrids = new List<CropBlock[,]>();
-
-    // Called when the script instance is being loaded
-    void Awake()
-    {
-        // Get the Grid component attached to this GameObject
-        _cropGrid = GetComponent<Grid>();
-    }
-
-    // Called before the first frame update
     private void Start()
     {
-        // Get all child Tilemaps under the Grid
-        var tilemaps = _cropGrid.GetComponentsInChildren<Tilemap>();
-        if (tilemaps.Length == 0) return;
-
-        foreach (Tilemap tilemap in tilemaps)
-        {
-            // Disable the visual rendering of the tilemap
-            if (tilemap.TryGetComponent(out TilemapRenderer tilemapRenderer))
-                tilemapRenderer.enabled = false;
-
-            // Generate crop blocks based on the tilemap layout
-            _cropGrids.Add(GenerateGridUsingTilemap(tilemap));
-        }
+        CreateGridUsingTilemap(farmingTilemap);
     }
 
-    // Called in the Unity Editor when values are changed in the Inspector
-    private void OnValidate()
+    public void CreateGridUsingTilemap(Tilemap tilemap)
     {
-        // Warn if the crop block prefab is missing
-        if (_cropBlockPrefab == null)
-        {
-            Debug.LogWarning($"[{nameof(CropManager)}] CropBlock prefab is not assigned.", this);
-        }
-
-        // Ensure the Grid component is present
-        if (GetComponent<Grid>() == null)
-        {
-            Debug.LogError($"[{nameof(CropManager)}] Missing required Grid component.", this);
-        }
-    }
-
-    // Generates a 2D array of CropBlocks based on the tilemap's layout
-    private CropBlock[,] GenerateGridUsingTilemap(Tilemap tilemap)
-    {
-        // Shrinks the tilemap bounds to fit only used tiles
         tilemap.CompressBounds();
 
-        var bounds = tilemap.cellBounds;
-        var width = bounds.size.x;
-        var height = bounds.size.y;
-        var offset = bounds.min;
+        boundsMin = tilemap.cellBounds.min;
+        boundsMax = tilemap.cellBounds.max;
 
-        var gridBlocks = new CropBlock[width, height];
+        int width = boundsMax.x - boundsMin.x;
+        int height = boundsMax.y - boundsMin.y;
 
-        // Iterate through each cell in the tilemap bounds
-        for (int y = 0; y < height; y++)
+        cropGrid = new CropBlock[width, height];
+
+        foreach (Vector3Int cell in tilemap.cellBounds.allPositionsWithin)
         {
-            for (int x = 0; x < width; x++)
-            {
-                // Convert local array index to tilemap cell position
-                var cellPosition = new Vector3Int(x + offset.x, y + offset.y, 0);
+            if (!tilemap.HasTile(cell))
+                continue;
 
-                // Only create a crop block if a tile exists at this position
-                if (tilemap.HasTile(cellPosition))
-                {
-                    var localGridPosition = new Vector2Int(x, y);
-                    //gridBlocks[x, y] = CreateGridBlock(tilemap, localGridPosition, cellPosition);
-                }
-            }
+            Vector2Int gridPos = new Vector2Int(cell.x - boundsMin.x, cell.y - boundsMin.y);
+            Vector3 worldPos = tilemap.GetCellCenterWorld(cell);
+
+            CreateGridBlock(tilemap, gridPos, worldPos);
         }
 
-        return gridBlocks;
+        Debug.Log("Crop grid created (debug only).");
     }
 
-    // Instantiates and initializes a CropBlock at the given position
-    //private CropBlock CreateGridBlock(Tilemap tilemap, Vector2Int location, Vector3Int position)
-    //{
-    //    // Instantiate the crop block prefab at the specified position
-    //    var newGridBlock = Instantiate(_cropBlockPrefab, position, Quaternion.identity, tilemap.transform);
+    public void CreateGridBlock(Tilemap tilemap, Vector2Int location, Vector3 position)
+    {
+        GameObject go = Instantiate(cropBlockPrefab, position, Quaternion.identity);
+        CropBlock block = go.GetComponent<CropBlock>();
 
-    //    // Initialize the crop block with its tilemap name, location, and manager reference
-    //    newGridBlock.Initialize(tilemap.name, location, this);
+        block.gridPosition = location;
+        block.worldPosition = position;
 
-    //    // Disable interaction if the tilemap is not tagged as "PlayerCrop"
-    //    if (tilemap.CompareTag("PlayerCrop") == false)
-    //        newGridBlock.PreventUse();
+        cropGrid[location.x, location.y] = block;
 
-    //    return newGridBlock;
-    //}
+        Debug.Log($"Created CropBlock at {location}");
+    }
 
-    // Adds a crop block to the list of planted crops if it's not already present
-    //public void AddToPlantedCrops(CropBlock cropBlock)
-    //{
-    //    if (CheckForValidLocation(cropBlock.Location))
-    //        _plantedCrops.Add(cropBlock);
-    //}
+    public CropBlock GetCropBlock(Vector3Int cell)
+    {
+        Vector2Int pos = new Vector2Int(cell.x - boundsMin.x, cell.y - boundsMin.y);
 
-    //// Removes a crop block from the list of planted crops based on its location
-    //public void RemoveFromPlantedCrops(Vector2Int location)
-    //{
-    //    var cropBlock = _plantedCrops.SingleOrDefault(q => q.Location == location);
-    //    if (cropBlock != null)
-    //        _plantedCrops.Remove(cropBlock);
-    //}
+        if (pos.x < 0 || pos.y < 0 || pos.x >= cropGrid.GetLength(0) || pos.y >= cropGrid.GetLength(1))
+            return null;
 
-    //// Checks if a location is available for planting (i.e., not already occupied)
-    //public bool CheckForValidLocation(Vector2Int location)
-    //{
-    //    return _plantedCrops.Any(q => q.Location == location) == false;
-   // }
-    //public CropBlock GetBlockAtCell(Vector3Int cellPos)
-    //{
-    //    foreach (var grid in _cropGrids)
-    //    {
-    //        int width = grid.GetLength(0);
-    //        int height = grid.GetLength(1);
-
-    //        for (int x = 0; x < width; x++)
-    //        {
-    //            for (int y = 0; y < height; y++)
-    //            {
-    //                CropBlock block = grid[x, y];
-    //                if (block != null)
-    //                {
-    //                    // Convert the block's world position to a cell
-    //                    Vector3Int blockCell = _cropGrid.WorldToCell(block.transform.position);
-    //                    if (blockCell == cellPos)
-    //                        return block;
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    return null;
-    //}
-
+        return cropGrid[pos.x, pos.y];
+    }
 }

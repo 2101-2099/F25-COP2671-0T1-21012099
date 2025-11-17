@@ -1,259 +1,97 @@
-using System;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 
 public class CropBlock : MonoBehaviour
 {
-    //public enum GrowthStage
-    //{
-    //    seed,
-    //    sprout,
-    //    young,
-    //    mature
-    //}
+    public Vector2Int gridPosition;
 
-    //tilled soil group probably a header
-    //tilled soil icon Sprite
-    //plowed soil sr    Sprite Render
-
-    //water soil group probably a header
-    //water soil icon Sprite
-    //watered soil sr Sprite Render
-
-    //crop sr       Sprite Render
-
-    //timer being timer in the bottom left corner with time of the world. So as the day goes by the timer shows the time in an hour.
-    //also a growth time
-    //plant needs to have been watered to grow
-    //check to see if something is selected or not to see if you can plant
-    //if there is already a plant there they are not allowed to till/plant there
-    //particle effect when ready to harvest
-    //plantings, watering, tilling, and harvest are going to be on button
-    //probably check if the tile has been watered by checking its tile instead maybe use a watered boolen that gets attached to a tile.
-    //watered tile will have the waterSR sprite on them.
-    //after a growth make the water tile back into the till tile to show it need to be watered again and turns off a watered tag.
-    //in an empty game object named cropblock I have a WaterSR sprite and a CropSR sprite
-    //going to make the cropblock object into a prefab object
-
-    //needs selected block for later used with farming controller for get; set; selected block is selecting a tile from the tilemap
-
-    //ignore this is a reminder do not forget to shift all of the tilemap by -0.5 to allign everything (going to work more with SO (scriptible objects))
-    //ignore this remember to add collision to water
-
-    //public Sprite tilledIcon;
-    //public SpriteRenderer tiledRenderer;
-
-    //public Sprite wateredIcon;
-    //public SpriteRenderer wateredRenderer;
-
-    //public SeedPacket plantedSeed;
-    //public SpriteRenderer cropRenderer;
-
-    //[SerializeField] float _growthTimer = 0f;
-    //[SerializeField] float _timer = 0f;
-
-    //private bool _isTilled = false;
-    //private bool _isWatered = false;
-    //private bool _isPlanted = false;
-
-    //#region Visual Overlays
-    //[Header("Overlay Renderers")]
-    [SerializeField] private SpriteRenderer cropSR;   // shows plant sprites
-    [SerializeField] private SpriteRenderer soilSR;   // optional — can show tilled soil color
-    [SerializeField] private SpriteRenderer waterSR;  // shows watered overlay
-    
-        //#endregion
-
-        //#region State
+    // State
     public bool isTilled = false;
     public bool isWatered = false;
-    public bool hasCrop = false;
-    public bool isPlowed = false;
-        //#endregion
+    public bool hasSeed = false;
+    public bool readyToHarvest = false;
 
-        //#region Growth
-        //public int currentGrowthStage = 0;
-        //public float growthTimer = 0f;
-        //public float growthTimePerStage = 5f;
-        ////public SeedPacket plantedSeed;
-        //#endregion
+    // Growth
+    public SeedPacket seed;
+    public int growthStage = 0;
+    public float growthTimer = 0f;
+    public float timePerStage = 4f;
 
-        //#region Grid / Manager
-        //public Vector2Int Location { get; private set; }
-        //public string TilemapName { get; private set; }
-      //  private CropManager _cropManager;
-    private Sprite soilSprite;
-    private Sprite waterSprite;
-    public Seedling currentSeedPrefab;
-    private Seedling plantling;
-    //private Seedling planting;
-        //#endregion
+    public Vector3 worldPosition;
 
-    private void Awake()
+    public void TillSoil()
     {
-        // Make sure overlays start hidden
-        soilSprite = soilSR.sprite;
-        waterSprite = waterSR.sprite;
-        soilSR.sprite = null;
-        waterSR.sprite = null;
-        cropSR.sprite = null;
-            //if (waterSR != null)waterSR.enabled = false;
-            //if (cropSR != null) cropSR.enabled = false;
+        isTilled = true;
+        Debug.Log($"[{gridPosition}] Soil tilled.");
     }
 
-       // private void Update()
-        //{
-          //  if (hasCrop && isWatered && plantedSeed != null)
-            //{
-              //  growthTimer += Time.deltaTime;
-
-                //if (growthTimer >= growthTimePerStage)
-                  //  AdvanceGrowth();
-            //}
-        //}
-
-    public void PlowCrop()  //want to use
+    public void WaterSoil()
     {
-        if (isPlowed == false)
-        {
-            soilSR.sprite = soilSprite;
-            isPlowed = true;
-            Debug.Log("testing2");
-        }
-    }
-    public void WaterCrop()
-    {
-        if (isPlowed == false) return;
-        if (isWatered) return;
-
-        waterSR.sprite = waterSprite;
         isWatered = true;
+        Debug.Log($"[{gridPosition}] Soil watered.");
     }
 
-    public void PlantCrop()
+    public void PlantSeed(SeedPacket newSeed)
     {
-        var planting = Instantiate(currentSeedPrefab, cropSR.transform);
-    }
-
-    public void HarvestCrop()
-    {
-        //placeholder
-        if (plantling.readyToHarvest)
+        if (!isTilled)
         {
-            plantling.convertToYield();
+            Debug.Log($"[{gridPosition}] Cannot plant — soil not tilled.");
+            return;
+        }
+
+        seed = newSeed;
+        hasSeed = true;
+        growthStage = 0;
+        growthTimer = 0f;
+
+        Debug.Log($"[{gridPosition}] Seed planted: {seed.cropName}");
+    }
+
+    private void Update()
+    {
+        if (!hasSeed || readyToHarvest)
+            return;
+
+        growthTimer += Time.deltaTime;
+
+        if (growthTimer >= timePerStage)
+        {
+            growthTimer = 0f;
+            growthStage++;
+
+            Debug.Log($"[{gridPosition}] Crop grew to stage {growthStage}.");
+
+            if (growthStage >= 3)
+            {
+                readyToHarvest = true;
+                Debug.Log($"[{gridPosition}] {seed.cropName} is ready to harvest!");
+            }
         }
     }
 
-    //    #region Player Actions
-    //    public void TillSoil()
-    //    {
-    //        if (!isTilled && CanInteract())
-    //        {
-    //            isTilled = true;
-    //            if (soilSR != null)
-    //            {
-    //                soilSR.enabled = true;  // show dry tilled soil
-    //            }
-    //        }
-    //    }
+    public void HarvestPlants()
+    {
+        if (!readyToHarvest)
+        {
+            Debug.Log($"[{gridPosition}] Nothing to harvest.");
+            return;
+        }
 
-    //public void WaterSoil()
-    //{
-    //    if (isTilled && !isWatered && CanInteract())
-    //    {
-    //        isWatered = true;
-    //        if (waterSR != null)
-    //            waterSR.enabled = true; // turn on the overlay
-    //    }
-    //}
+        Debug.Log($"[{gridPosition}] Harvested {seed.cropName}!");
 
-    //public void PlantSeed(SeedPacket seed)
-    //{
-    //    if (isTilled && isWatered && !hasCrop && CanInteract())
-    //    {
-    //        plantedSeed = seed;
-    //        hasCrop = true;
-    //        currentGrowthStage = 0;
-    //        growthTimer = 0f;
-
-    //        if (cropSR != null)
-    //        {
-    //            cropSR.enabled = true;
-    //            cropSR.sprite = plantedSeed.growthSprites[currentGrowthStage];
-    //        }
-
-    //        _cropManager.AddToPlantedCrops(this);
-    //    }
-    //}
-
-    //public void HarvestPlants()
-    //{
-    //    if (!hasCrop || plantedSeed == null || !CanInteract())
-    //        return;
-
-    //    if (currentGrowthStage >= plantedSeed.growthSprites.Length - 1)
-    //    {
-    //        // spawn harvestable prefab if defined
-    //        if (plantedSeed.harvestablePrefab != null)
-    //            Instantiate(plantedSeed.harvestablePrefab, transform.position, Quaternion.identity);
-
-    //        ResetCrop();
-    //        _cropManager.RemoveFromPlantedCrops(Location);
-    //    }
-    //}
-    //#endregion
-
-    //#region Growth Logic
-    //private void AdvanceGrowth()
-    //{
-    //    growthTimer = 0f;
-    //    currentGrowthStage++;
-
-    //    if (plantedSeed != null && currentGrowthStage < plantedSeed.growthSprites.Length)
-    //    {
-    //        if (cropSR != null)
-    //            cropSR.sprite = plantedSeed.growthSprites[currentGrowthStage];
-    //    }
-    //    else
-    //    {
-    //        currentGrowthStage = plantedSeed.growthSprites.Length - 1;
-    //    }
-
-    //    // After growing, dry out the soil
-    //    isWatered = false;
-    //    if (waterSR != null)
-    //        waterSR.enabled = false;
-    //}
-
-    //private void ResetCrop()
-    //{
-    //    hasCrop = false;
-    //    isTilled = true;   // still tilled after harvest
-    //    isWatered = false;
-    //    plantedSeed = null;
-    //    growthTimer = 0f;
-    //    currentGrowthStage = 0;
-
-    //    // Turn off overlays
-    //    if (waterSR != null) waterSR.enabled = false;
-    //    if (cropSR != null) cropSR.enabled = false;
-    //    if (cropSR != null) cropSR.sprite = null;
-    //}
-    //#endregion
-
-    //#region Helpers
-    //private bool CanInteract() => _cropManager != null && enabled;
-
-    //public void PreventUse()
-    //{
-    //    enabled = false;
-    //}
-
-    //public void Initialize(string tilemapName, Vector2Int location, CropManager cropManager)
-    //{
-    //    TilemapName = tilemapName;
-    //    Location = location;
-    //    _cropManager = cropManager;
-    //}
-    //#endregion
+        // Reset state
+        hasSeed = false;
+        readyToHarvest = false;
+        isTilled = false;
+        isWatered = false;
+        seed = null;
+        growthStage = 0;
+    }
+}
+public enum SoilState
+{
+    Empty,
+    Tilled,
+    Watered,
+    Growing,
+    HarvestReady
 }
