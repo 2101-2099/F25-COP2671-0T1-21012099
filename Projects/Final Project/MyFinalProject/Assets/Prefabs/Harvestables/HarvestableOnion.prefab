@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2916666719768895201}
   - component: {fileID: 4408131040019509676}
   - component: {fileID: 2529293779461175710}
+  - component: {fileID: -8374026231878817820}
   m_Layer: 0
   m_Name: HarvestableOnion
   m_TagString: Untagged
@@ -75,7 +76,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 289168971
-  m_SortingLayer: 8
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: -4556998326448509553, guid: 3c0fd9e79fa04564cb25b27e59aceaac, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -122,7 +123,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.0014342666, y: -0.5069748}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -132,5 +133,18 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.0001, y: 0.0001}
+  m_Size: {x: 1.0351516, y: 1.0138497}
   m_EdgeRadius: 0
+--- !u!114 &-8374026231878817820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9191359821145316233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7e0586db7f10014d955b42f4953db34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 1e2e49c136b5fec4a8a861377fb2e940, type: 2}
