@@ -2,9 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Manages the in-game time cycle, simulating a 24-hour day over a configurable real-time duration.
-/// </summary>
+//Time manager script
 public class TimeManager : SingletonMonoBehaviour<TimeManager>
 {
     // Constants for time conversion and in-game day length
@@ -74,9 +72,7 @@ public class TimeManager : SingletonMonoBehaviour<TimeManager>
     {
         _isCycleActive = !_isCycleActive;
     }
-    /// <summary>
-    /// Sets the starting hour
-    /// </summary>
+
     /// <param name="hour"></param>
     public static void SetStartHour(int hour)
     {

@@ -1,16 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
-
-//Player inventory SO
 [System.Serializable]
-public class InventoryEntry
+public class ShopEntry
 {
     public ItemData item;
     public int quantity;
+    public int price;
 }
-[CreateAssetMenu(menuName = "Inventory/Player Inventory Data")]
-public class InventoryPlayer : ScriptableObject
+[CreateAssetMenu(menuName = "Inventory/Shop Inventory Data")]
+public class ShopUISO : ScriptableObject
 {
     public List<InventoryEntry> playerInventory = new List<InventoryEntry>();
-    public int money = 0;
 }

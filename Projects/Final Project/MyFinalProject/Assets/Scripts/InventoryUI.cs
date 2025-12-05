@@ -5,6 +5,7 @@ using System.Data;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
+//Inventory UI
 public class InventoryUI : MonoBehaviour
 {
     [SerializeField] private Inventory _inventory;

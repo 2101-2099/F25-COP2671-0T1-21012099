@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
+//Lighting script
 //required component
 [RequireComponent(typeof(Light2D))]
 public class DayNightLighting : MonoBehaviour

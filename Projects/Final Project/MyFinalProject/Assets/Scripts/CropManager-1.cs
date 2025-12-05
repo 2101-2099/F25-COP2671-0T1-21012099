@@ -1,14 +1,16 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+//Crop Manager script
 public class CropManager : MonoBehaviour
 {
     public Tilemap farmingTilemap;
+    //public Tilemap WildCrops;
     public GameObject cropBlockPrefab;  // A prefab containing CropBlock
 
     private CropBlock[,] cropGrid;
-    private Vector3Int boundsMin;
-    private Vector3Int boundsMax;
+    private Vector2Int boundsMin;
+    private Vector2Int boundsMax;
 
     private void Start()
     {
@@ -19,8 +21,8 @@ public class CropManager : MonoBehaviour
     {
         tilemap.CompressBounds();
 
-        boundsMin = tilemap.cellBounds.min;
-        boundsMax = tilemap.cellBounds.max;
+        boundsMin = (Vector2Int)tilemap.cellBounds.min;
+        boundsMax = (Vector2Int)tilemap.cellBounds.max;
 
         int width = boundsMax.x - boundsMin.x;
         int height = boundsMax.y - boundsMin.y;

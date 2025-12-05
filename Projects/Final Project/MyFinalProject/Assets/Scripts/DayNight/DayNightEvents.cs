@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+//Day Night Events
 public class DayNightEvents : MonoBehaviour
 {
     //variables
@@ -24,7 +25,7 @@ public class DayNightEvents : MonoBehaviour
 
     private float _previousTime = 0f;
 
-    private bool _isDaytime;
+    public bool _isDaytime = true;
     private bool _hasTriggeredMidnight;
 
     private void OnEnable()
@@ -42,7 +43,6 @@ public class DayNightEvents : MonoBehaviour
 
     private void CheckTime(float normalizedTime)
     {
-        // Detect transitions between night/day
 
         // Sunrise: was night, now time >= sunrise and before sunset
         if (!_isDaytime && normalizedTime >= _sunriseTime && normalizedTime < _sunsetTime)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-//camera controller
+//camera controller script
 public class CameraController : MonoBehaviour
 {
     //variables

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+//ToolBar script
 public class ToolbarController : MonoBehaviour
 {
     public FarmingController farmingController;
@@ -34,7 +35,7 @@ public class ToolbarController : MonoBehaviour
         if (Keyboard.current.digit4Key.wasPressedThisFrame)
         {
             farmingController.OnGather();
-            Debug.Log("OnGather called");
+            Debug.Log("OnHarvest called");
         }
     }
 }

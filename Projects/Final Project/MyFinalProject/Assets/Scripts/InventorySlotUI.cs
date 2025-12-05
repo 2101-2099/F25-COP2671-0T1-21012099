@@ -3,6 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Inventory Slot UI script
 public class InventorySlotUI : MonoBehaviour
 {
     public Image icon;

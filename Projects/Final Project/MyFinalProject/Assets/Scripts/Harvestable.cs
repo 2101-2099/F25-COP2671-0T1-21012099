@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//Harvestable script
 public class Harvestable : MonoBehaviour
 {
     public ItemData data;
